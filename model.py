@@ -46,7 +46,7 @@ y_train = np.array(measurements)
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Dropout, Lambda
-from keras.layers.convolutional import Convolution2D, Cropping2D
+from keras.layers.convolutional import Conv2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 model = Sequential()
@@ -55,26 +55,37 @@ model = Sequential()
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160, 320, 3)))
 
 # Crop the images to remove data from the image that can distract the network from predicting the lane
-model.add(Cropping2D(cropping=((70, 25), (0, 0))))
+model.add(Cropping2D(cropping=((70, 24), (0, 0)))) #Output Image Shape: 3x66x320
 
 # Add first convolutional layer
-model.add(Convolution2D(6, 5, 5, activation='relu'))
-model.add(MaxPooling2D())
+model.add(Conv2D(24, 5, 5, activation='relu', subsample=(2, 2))) #Input 3@66x200, Output 24@31x98
+#model.add(MaxPooling2D())
 #model.add(Dropout(0.25))
 
+model.add(Conv2D(36, 5, 5, activation='relu', subsample=(2, 2))) #Input 24@31x98, Output 36@14x47
+#model.add(MaxPooling2D())
+
+model.add(Conv2D(48, 5, 5, activation='relu', subsample=(2, 2))) #Input 36@14x47, Output 48@5x22
+#model.add(MaxPooling2D())
+
+model.add(Conv2D(64, 3, 3, activation='relu')) #Input 48@5x22, Output 64@3x20
+#model.add(MaxPooling2D())
+
 # Add second convolutional layer
-model.add(Convolution2D(16, 5, 5, activation='relu'))
-model.add(MaxPooling2D())
+model.add(Conv2D(64, 3, 3, activation='relu')) #Input 64@3x20, Output 64@1x18
+#model.add(MaxPooling2D())
 #model.add(Dropout(0.25))
           
 # Add fully connected layer
 model.add(Flatten())
-model.add(Dense(120))
-model.add(Dense(84))
+model.add(Dense(100))
+model.add(Dense(50))
+model.add(Dense(10))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss='mse')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=3)
 
 model.save('model.h5')
+model.summary()
 print("Run the command: python drive.py model.h5")
