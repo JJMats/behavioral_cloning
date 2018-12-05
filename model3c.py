@@ -20,23 +20,28 @@ with open(directory + 'driving_log.csv') as csvFile:
 
 images = []
 measurements = []
-corr_fact = 0.1
+corr_fact = 0.2
 
 for line in lines:
-    source_path = line[0]
-    tokens = source_path.split('/')
-    filename = tokens[-1]
-    local_path = directory + 'IMG/' + filename
+    for i in range(3):        
+        source_path = line[i]
+        tokens = source_path.split('/')
+        filename = tokens[-1]
+        local_path = directory + 'IMG/' + filename
         
-    image = ndimage.imread(local_path)
-    images.append(image)
-    image_flipped = np.fliplr(image)
-    images.append(image_flipped)
+        image = ndimage.imread(local_path)
+        images.append(image)
+        #image_flipped = np.fliplr(image)
+        #images.append(image_flipped)
     
-    measurement = float(line[3])
-    measurement_flipped = -measurement
+    measurement = float(line[3])    
+    #measurement_flipped = -measurement
     measurements.append(measurement)
-    measurements.append(measurement_flipped)
+    #measurements.append(measurement_flipped)
+    measurements.append(measurement + corr_fact)
+    #measurements.append(-(measurement_flipped + corr_fact))
+    measurements.append(measurement - corr_fact)
+    #measurements.append(-(measurement_flipped - corr_fact))
     
 # Compile arrays of training data
 X_train = np.array(images)
