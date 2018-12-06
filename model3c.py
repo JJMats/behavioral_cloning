@@ -91,7 +91,6 @@ model.add(LeakyReLU(alpha=leaky_alpha))
 # Fourth convolutional layer
 model.add(Conv2D(64, 3, 3)) # Input: (5, 37, 48), Output: (3, 35, 64)
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
 
 # Fifth convolutional layer
 model.add(Conv2D(64, 3, 3)) # Input: (3, 35, 64), Output: (1, 33, 64)
