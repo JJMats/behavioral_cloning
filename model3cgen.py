@@ -9,7 +9,8 @@ lines = []
 #directory = '/opt/carnd_p3/data/'
 
 # My training data
-directory = '/root/Desktop/data/'
+#directory = '/root/Desktop/data/'
+directory = '../BehavioralCloningData2/'
 
 with open(directory + 'driving_log.csv') as csvFile:
     print("Getting image files...")
@@ -21,6 +22,10 @@ with open(directory + 'driving_log.csv') as csvFile:
         
 from sklearn.model_selection import train_test_split
 training_images, validation_images = train_test_split(lines, test_size=0.2)
+
+print('Line Count:', len(lines))
+print('Training images length:', len(training_images))
+print('Validation images length:', len(validation_images))
 
 def generator(images, batch_size=32):
     n_images = len(images)
@@ -123,8 +128,8 @@ model.compile(optimizer='adam', loss='mse')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=10)
 model.fit_generator(training_data_generator, samples_per_epoch=len(training_images),
                     validation_data=validation_data_generator,
-                    nb_val_samples=len(validation_images), epochs=3)
+                    nb_val_samples=len(validation_images), epochs=4)
 
-model.save('model3cgen.h5')
+model.save('model3cgen2.h5')
 model.summary()
-print("Run the command: python drive.py model3cgen.h5")
+print("Run the command: python drive.py model3cgen2.h5")
