@@ -130,6 +130,6 @@ model.fit_generator(training_data_generator, samples_per_epoch=len(training_imag
                     validation_data=validation_data_generator,
                     nb_val_samples=len(validation_images), epochs=4)
 
-model.save('model3cgen2.h5')
+model.save('model3cgen3.h5')
 model.summary()
-print("Run the command: python drive.py model3cgen2.h5")
+print("Run the command: python drive.py model3cgen3.h5")
