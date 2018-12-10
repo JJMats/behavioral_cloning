@@ -1,16 +1,10 @@
 # **Behavioral Cloning** 
 
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Behavioral Cloning Project**
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
-* Build, a convolution neural network in Keras that predicts steering angles from images
+* Build, a convolutional neural network in Keras that predicts steering angles from images
 * Train and validate the model with a training and validation set
 * Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
@@ -51,20 +45,20 @@ python drive.py model.h5
 
 #### 3. Submission code is usable and readable
 
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
+The model.py file contains the code for training and saving the convolutional neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
 ### Model Architecture and Training Strategy
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolutional neural network that is based upon the successful end-to-end deep learning model developed by NVIDIA. The structure of the network utilizes varying filter sizes, five convolutional feature layers, four fully connected layers, and a multiple activation functions to reduce overfitting and improve the model's ability to generalize.
+The chosen model consists of a convolutional neural network that is based upon the successful end-to-end deep learning model developed by NVIDIA. The structure of the network utilizes varying filter sizes, five convolutional feature layers, four fully connected layers, and multiple activation functions to reduce overfitting and improve the model's ability to generalize.
 
 
 #### 2. Attempts to reduce overfitting in the model
 
-Multiple approaches were used to reduce overfitting of the model. After numerous attempts, it was found that a single dropout layer in conjunction with the LeakyReLU activation functions provided a satisfactory reduction in neuron links to provide adequate performance of the final model. The model contains the dropout layer between the final convolutional layer and the flattening layer (code line 112). This was utilized to reduce overfitting of the model. 
+Multiple approaches were used to reduce overfitting of the model. After numerous attempts, it was found that a single dropout layer in conjunction with the LeakyReLU activation functions provided a satisfactory reduction in neuron links to provide adequate performance of the final model. The model contains a dropout layer between the final convolutional layer and the flattening layer (model.py, line 112) to reduce overfitting of the model. 
 
-For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (code line 23). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance and fitment. The performance of the model was quantified by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
+For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (model.py, line 23). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance. The performance of the model was quantified by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
 
 
 #### 3. Model parameter tuning
@@ -80,7 +74,7 @@ The hyperparameters utilized to tune the model include:
 - LeakyReLU alpha (leaky_alpha)
   - The alpha value chosen for the LeakyReLU activation function was tuned by visualizing the vehicle driving autonomously around the test tracks. Values tested ranged from 0.1 to 0.3, but reducing the value improved lane keeping and center finding.
 - Learning rate
-  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 (code line 121).
+  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 (model.py, line 121).
 - Steering correction factor
   - All three of the camera views obtained from the simulator were utilized for training and validation of the model. A steering correction factor was applied to the steering angle measurement (pre-training) to improve vehicle straight-line stability and to adjust the gain of the steering angle influence on the model provided by the side camera images. Values tested ranged from 0.1 to 0.3, and the median value of 0.2 was settled upon.
 
