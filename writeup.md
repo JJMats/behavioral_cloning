@@ -18,13 +18,16 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[imgModelVis]: ./examples/rawplaceholder.png "Model Visualization"
+[imgRawLeft]: ./output_images/raw/raw_image1.png "Raw Image - Left Camera"
+[imgRawCenter]: ./output_images/raw/raw_image0.png "Raw Image - Center Camera"
+[imgRawRight]: ./output_images/raw/raw_image2.png "Raw Image - Right Camera"
+[imgCropLeft]: ./output_images/cropped/cropped_image1.png "Cropped Image - Left Camera"
+[imgCropCenter]: ./output_images/cropped/cropped_image0.png "Cropped Image - Center Camera"
+[imgCropRight]: ./output_images/cropped/cropped_image2.png "Cropped Image - Right Camera"
+[imgFlipLeft]: ./output_images/flipped/flipped_image1.png "Flipped Image - Left Camera"
+[imgFlipCenter]: ./output_images/flipped/flipped_image0.png "Flipped Image - Center Camera"
+[imgFlipRight]: ./output_images/flipped/flipped_image2.png "Flipped Image - Right Camera"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -137,14 +140,16 @@ The model consists of 348,219 trainable parameters, and achieves a training MSE 
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
-![alt text][image1]
+![alt text][imgModelVis]
 
 
 #### 3. Creation of the Training Set & Training Process
 
 To train the model, it was necessary to capture ideal driving behavior. To begin, three laps were recorded on the "Lake" track using center lane driving. Another lap was captured travelling in the opposite direction of the first three to help minimize turning direction bias. An example image set captured of center lane driving is:
 
-![alt text][image2]
+![alt text][imgRawLeft]
+![alt text][imgRawCenter]
+![alt text][imgRawRight]
 
 In addition to the center lane driving data, samples were captured of the vehicle recovering from the left and right sides of the driving surface back to the center to help the network learn to steer back to the center of the driving surface if its position started to deviate towards an edge. An example image set of recovery from the side of the driving surface to the center is:
 
@@ -158,16 +163,16 @@ The samples gathered from the "Lake" track training were adequate to generate a 
 
 To further augment the data set, all of the images gathered from each of the three cameras were flipped left-to-right, and the steering angle measurements were negated. This doubled the sample size in an effort to increase training data while reducing left/right turning bias. An example of an image set that has been flipped is:
 
-![alt text][image6]
-![alt text][image7]
+![alt text][imgFlipLeft]
+![alt text][imgFlipCenter]
+![alt text][imgFlipRight]
 
-Upon completion of the training data collection process, the resulting training image count was 105,420 images (17,570 samples x 3 camera views x 2 flipped image augmentation). Further preprocessing of the data included cropping and normalizing the images.
+Upon completion of the training data collection process, the resulting training image count was 105,420 images (17,570 samples x 3 camera views x 2 flipped image augmentation). Further preprocessing of the data included cropping and normalizing the images. An example of an image set that has been cropped is:
 
-Etc ....
+![alt text][imgCropLeft]
+![alt text][imgCropCenter]
+![alt text][imgCropRight]
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+The data set was then shuffled, and 20% of it was split off into a validation data set. Finally, the model was trained utilizing the training data set, and the fitment was quantified with the validation set. It was determined that four epochs were adequate to train the model with a slight overfitment as evidenced by a decreasing MSE on the training data while the MSE on the validation data slightly increased. This value was also balanced against training time of the model, as batch selection size from this large data set affected training duration and accuracy dramatically.
 
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+An Adam optimizer was selected because it is computationally efficient, and can provide satisfactory results rapidly. It also decays the learning rate as training progresses which can improve overall accuracy of the model as opposed to a fast, fixed learning rate.
