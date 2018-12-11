@@ -113,8 +113,8 @@ Following the cropping layer, five convolutional layers were implemented. These 
 
 ![alt text][imgModelVis]
 
-* Original Source: NVIDIA CNN Neural Network Architecture. NVIDIA Developer, NVIDIA Developer Blog, 17 Aug. 2016,
-	https://devblogs.nvidia.com/deep-learning-self-driving-cars *
+*Original Source: NVIDIA CNN Neural Network Architecture. NVIDIA Developer, NVIDIA Developer Blog, 17 Aug. 2016,
+	https://devblogs.nvidia.com/deep-learning-self-driving-cars*
 
 The first three layers apply a convolution to the image with 5x5px filters, a 2x2px stride, and 'VALID' padding (model.py, lines 92, 96, 100). Through this process, the input is transformed from the 66x320px 3-layer cropped image to a 31x158px sized 24-layer sample, and then to a 14x77px sized 36-layer sample.
 
@@ -164,5 +164,5 @@ The data set was then shuffled, and 20% of it was split off into a validation da
 An Adam optimizer was selected because it is computationally efficient, and can provide satisfactory results rapidly. It also decays the learning rate as training progresses which can improve overall accuracy of the model as opposed to a fast, fixed learning rate.
 
 The model was tested against the simulator, and output videos were generated of the model's performance on each of the tracks. They can be found below:
-- /output_videos/run_lake_1.mp4
-- /output_videls/run_jungle_1.mp4
+- [Lake Track Run](./output_videos/run_lake_1.mp4)
+- [Jungle Track Run])(./output_videos/run_jungle_1.mp4)
