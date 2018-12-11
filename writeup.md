@@ -19,9 +19,6 @@ The goals / steps of this project are the following:
 [imgCropLeft]: ./output_images/cropped/cropped_image1.png "Cropped Image - Left Camera"
 [imgCropCenter]: ./output_images/cropped/cropped_image0.png "Cropped Image - Center Camera"
 [imgCropRight]: ./output_images/cropped/cropped_image2.png "Cropped Image - Right Camera"
-[imgFlipLeft]: ./output_images/flipped/flipped_image1.png "Flipped Image - Left Camera"
-[imgFlipCenter]: ./output_images/flipped/flipped_image0.png "Flipped Image - Center Camera"
-[imgFlipRight]: ./output_images/flipped/flipped_image2.png "Flipped Image - Right Camera"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
