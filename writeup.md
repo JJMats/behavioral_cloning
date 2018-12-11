@@ -130,12 +130,14 @@ The model consists of 348,219 trainable parameters, and achieves a training MSE 
 #### 3. Creation of the Training Set & Training Process
 
 To train the model, it was necessary to capture ideal driving behavior. To begin, three laps were recorded on the "Lake" track using center lane driving. Another lap was captured travelling in the opposite direction of the first three to help minimize turning direction bias. An example image set captured of center lane driving is:
-
-![alt text][imgRawLeft]
-
-![alt text][imgRawCenter]
-
-![alt text][imgRawRight]
+<p align='center'>
+  ![alt text][imgRawLeft]
+  <b>Left<b>
+  ![alt text][imgRawCenter]
+  <b>Center<b>
+  ![alt text][imgRawRight]
+  <b>Right<b>
+</p>
 
 In addition to the center lane driving data, samples were captured of the vehicle recovering from the left and right sides of the driving surface back to the center to help the network learn to steer back to the center of the driving surface if its position started to deviate towards an edge.
 
