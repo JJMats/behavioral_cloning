@@ -177,3 +177,11 @@ An Adam optimizer was selected because it is computationally efficient, and can 
 The model was tested against the simulator, and output videos were generated of the model's performance on each of the tracks. They can be found below:
 - [Lake Track Run](./output_videos/run_lake_1.mp4)
 - [Jungle Track Run](./output_videos/run_jungle_1.mp4)
+
+### Final Thoughts
+
+This project was a great dive into deep learning, and provided an example of the power of neural networks trained on behavioral cloning. The Keras framework reduced the verbosity of the code to generate the model greatly, and provided much cleaner and more readable code. The Udacity provided simulator was an impressive tool for this project.
+
+Some of the complications of this project were related to data gathering and handling, and then training time of the model. As the training image count grew large, it was required that a generator was utilized to load batches of images to reduce the quantity of memory utilized at any given time. This dramatically increased training time of the model, and consistently resulted in models that would not run. There is intent to revisit this project with additionally gathered data to improve single lane driving on the "Jungle" track without specifically following the center dividing lane lines. 
+
+Another improvement that may be able to be applied would be a smoothing filter applied to steering movements, prior to splitting the data, to improve vehicle stability when driving on straight sections of the road.
