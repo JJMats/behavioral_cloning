@@ -2,6 +2,7 @@ import csv
 import cv2
 import numpy as np
 from scipy import ndimage
+import matplotlib.image as mpimage
 
 lines = []
 
@@ -30,7 +31,7 @@ for line in lines:
         
         image = ndimage.imread(local_path)
         images.append(image)
-    
+
     measurement = float(line[3])    
     measurements.append(measurement)
     measurements.append(measurement + corr_fact)
