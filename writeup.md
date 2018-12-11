@@ -56,25 +56,23 @@ The chosen model consists of a convolutional neural network that is based upon t
 
 #### 2. Attempts to reduce overfitting in the model
 
-Multiple approaches were used to reduce overfitting of the model. After numerous attempts, it was found that a single dropout layer in conjunction with the LeakyReLU activation functions provided a satisfactory reduction in neuron links to provide adequate performance of the final model. The model contains a dropout layer between the final convolutional layer and the flattening layer (model.py, line 112) to reduce overfitting of the model. 
+Multiple approaches were used to reduce overfitting of the model. After numerous attempts, it was found that a single dropout layer in conjunction with the LeakyReLU activation functions provided a satisfactory reduction in neuron links to provide adequate performance of the final model. The model contains a dropout layer between the final convolutional layer and the flattening layer (model.py, line 77) to reduce overfitting of the model. 
 
-For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (model.py, line 23). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance. The performance of the model was evaluated by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
+For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (model.py, line 87). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance. The performance of the model was evaluated by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
 
 
 #### 3. Model parameter tuning
 
 The hyperparameters utilized to tune the model include:
 
-- Batch size
-  - A generator was used to reduce the quantity of data loaded into memory throughout the training process. The final value chosen was 16 samples per batch. Smaller batch sizes improved training speed of the model considerably, but larger batch sizes improved training accuracy.
 - Dropout keep probability
-  - This value was chosen to reduce overfitting of the model. The range of values tested were 0.25 - 0.5, and the final selected value was 0.5. These affected how well the vehicle would follow the road and keep centered in the lane. Reducing this value tended to allow the vehicle to track closer to the lane edges when in turns, while increasing the value assisted in successful center finding.
+  - This value was chosen to reduce overfitting of the model. The range of values tested were 0.2 - 0.5, and the final selected value was 0.2. These affected how well the vehicle would follow the road and keep centered in the lane. Increasing this value tended to allow the vehicle to track closer to the lane edges when in turns, while decreasing the value assisted in successful center finding.
 - Epochs
-  - The epoch count utilized was dependent upon the training data set size and the batch size. Increasing the batch size tended to slow model training down, but improved the accuracy. Therefore, this value could be reduced when the batch size was increased (inversely proportional).
+  - The selected epoch count was chosen after observing the decreasing mean squared error (MSE) of the training data and the validation data sets plateau. It was determined that additional training may overfit the model.
 - LeakyReLU alpha (leaky_alpha)
   - The alpha value chosen for the LeakyReLU activation function was tuned by visualizing the vehicle driving autonomously around the test tracks. Values tested ranged from 0.1 to 0.3, but reducing the value improved lane keeping and center finding.
 - Learning rate
-  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 and decayed as training progressed (model.py, line 121).
+  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 and decayed as training progressed (model.py, line 86).
 - Steering correction factor
   - All three of the camera views obtained from the simulator were utilized for training and validation of the model. A steering correction factor was applied to the steering angle measurement (pre-training) to improve vehicle straight-line stability and to adjust the gain of the steering angle influence on the model provided by the side camera images. Values tested ranged from 0.1 to 0.3, and the median value of 0.2 was settled upon.
 
@@ -94,9 +92,9 @@ The overall strategy for deriving a model architecture was to generate a neural 
 
 To begin, my initial step was to use a convolutional neural network model similar to the NVIDIA architecture. I thought this model might be appropriate because it has been utilized successfully in other autonomous vehicle endeavors, including a remote controlled car project.
 
-To quantify the model's ability to generalize, I split the training data (images and steering angles) into training and validation data sets. I chose a 80/20% split of the data, and used the larger portion for training the model. Upon initial validation, it was found that the MSE (mean squared error) calculated on the training set was low, but the MSE of the validation data was slightly more. This implies that the model was slightly overfitting the data, so it was worthwhile to make attempts to reduce it.
+To quantify the model's ability to generalize, I split the training data (images and steering angles) into training and validation data sets. I chose a 80/20% split of the data, and used the larger portion for training the model. Upon initial validation, it was found that the MSE (mean squared error) calculated on the training set was lower than the MSE on the validation data set. This implies that the model was overfitting the data, so it was worthwhile to make attempts to reduce it.
 
-To reduce the model's tendency to overfit the data, I selected different activation layers (changed from ReLU to LeakyReLU) and added a dropout layer. 
+To reduce the model's tendency to overfit the data, I selected different activation layers (changed from ReLU to LeakyReLU) and added a dropout layer. This decreased the MSE of both data sets, and improved the overall lane center-finding performance of the model.
 
 After the model was trained and validated, it was then necessary to run the simulator to visualize the performance of the network on images input from a vehicle driving autonomously around the track. During the first test on the "Lake" track, the vehicle found the lane center fairly well on straight sections of the track, but did tend to drive off of the side of the road in turns, and in locations where the features at the side of the driving surface could be misjudged as a viable path.
 
@@ -107,29 +105,26 @@ Upon conclusion of the process, the vehicle was able to drive autonomously on bo
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py, code lines 78-134) begins with a normalization layer. This layer converts the 8-bit pixel values from each of the three color channels (RGB), and reduces them to a zero-centric value between -0.5 and +0.5. This helps to reduce the work the optimizer must do because all of the pixel values are within a narrowed range around a zero median value. This is performed by utilizing a Keras Lambda layer (code line 86). An attempt was made to increase the range of the normalized values to +/-1.0, but this reduced the stability of the model.
+The final model architecture (model.py, lines 43-87) begins with a normalization layer. This layer converts the 8-bit pixel values from each of the three color channels (RGB), and reduces them to a zero-centric value between -0.5 and +0.5. This helps to reduce the work the optimizer must do because all of the pixel values are within a narrowed range around a zero median value. This is performed by utilizing a Keras Lambda layer (model.py, line 56). An attempt was made to increase the range of the normalized values to +/-1.0, but this reduced the stability of the model.
 
-The next layer crops the images into smaller sizes. The images generated by the simulator are 120px X 320px, and they are reduced to 66px X 320 px by utilizing a Keras Cropping 2D layer (model.py, line 89). This has multiple benefits, since it reduces the workload on the model, and removes extraneous objects from the field of view that either do not help the model, or negatively affect the decisions made. The top of each image was trimmed by 70 pixels to remove distant background features while improving the ability of the model to handle positive and negative slopes, and the bottom of the image was trimmed by 24 pixels to remove the hood of the car. An example of a raw simulator output image and a cropped image are as follows:
-
-**** Images Here (Raw Image, Cropped Image) 
+The next layer crops the images into smaller sizes. The images generated by the simulator are 120px X 320px, and they are reduced to 66px X 320 px by utilizing a Keras Cropping 2D layer (model.py, line 59). This has multiple benefits, since it reduces the workload on the model, and removes extraneous objects from the field of view that either do not help the model, or negatively affect the decisions made. The top of each image was trimmed by 70 pixels to remove distant background features while improving the ability of the model to handle positive and negative slopes, and the bottom of the image was trimmed by 24 pixels to remove the hood of the car. An example of raw simulator output images and cropped images can be found in section 3 below.
 
 Following the cropping layer, five convolutional layers were implemented. These utilize the Keras Convolutional2D (Conv2D in Keras 2) layer, and are each followed by a Keras LeakyReLU activation function. Here is a visualization of the architecture:
 
 ![alt text][imgModelVis]
-_ Original Source: NVIDIA CNN Neural Network Architecture. NVIDIA Developer, NVIDIA Developer Blog, 17 Aug. 2016,
-	https://devblogs.nvidia.com/deep-learning-self-driving-cars _
 
-The first three layers apply a convolution to the image with 5x5px filters, a 2x2px stride, and 'VALID' padding (code lines 92, 96, 100). Through this process, the input is transformed from the 66x320px 3-layer cropped image to a 31x158px sized 24-layer sample, and then to a 14x77px sized 36-layer sample.
+* Original Source: NVIDIA CNN Neural Network Architecture. NVIDIA Developer, NVIDIA Developer Blog, 17 Aug. 2016,
+	https://devblogs.nvidia.com/deep-learning-self-driving-cars *
 
-The next two convolutional layers are applied with a 3x3px filter, a 1x1px stride, and 'VALID' padding (code lines 104, 108). These layers reduce the sample size further, while continuing to increase the depth. The sample is transformed from the 14x77px sized 36-layer version from the third layer into a 5x37px sized 48-layer version, and then finally into a 3x35px sized 64-layer sample.
+The first three layers apply a convolution to the image with 5x5px filters, a 2x2px stride, and 'VALID' padding (model.py, lines 92, 96, 100). Through this process, the input is transformed from the 66x320px 3-layer cropped image to a 31x158px sized 24-layer sample, and then to a 14x77px sized 36-layer sample.
 
-In-between each of the convolutional layers, a LeakyReLU activation function is applied to assist in reducing overfitting of the model. The LeakyReLU function was chosen because...
+The next two convolutional layers are applied with a 3x3px filter, a 1x1px stride, and 'VALID' padding (model.py, lines 104, 108). These layers reduce the sample size further, while continuing to increase the depth. The sample is transformed from the 14x77px sized 36-layer version from the third layer into a 5x37px sized 48-layer version, and then finally into a 3x35px sized 64-layer sample.
 
-***
+In-between each of the convolutional layers, a LeakyReLU activation function is applied to assist in reducing overfitting of the model. The LeakyReLU function was chosen because it helps mitigate neuron death of the model, and tended to perform better as viewed by testing the model with the simulator.
 
-The model then flattens the sample into a 1x33px sized 64-layer object and passes it through three fully-connected Keras Dense layers (code lines 116-119). These fully-connected layers reduce the object from 2112 neurons to 100, 50, and then 10, respectively. The final output is then a single neuron that produces the steering angle to be utilized by the autonomous driving simulator. 
+The model then flattens the sample into a 1x33px sized 64-layer object and passes it through three fully-connected Keras Dense layers (model.py, lines 81-83). These fully-connected layers reduce the object from 2112 neurons to 100, 50, and then 10, respectively. The final output is then a single neuron that produces the steering angle to be utilized by the autonomous driving simulator (model.py, line 84). 
 
-The model consists of 348,219 trainable parameters, and achieves a training MSE of 0.0243 with a validation MSE of 0.0894.
+The model consists of 348,219 trainable parameters, and achieves a training MSE of 0.0623 with a validation MSE of 0.1212.
 
 
 #### 3. Creation of the Training Set & Training Process
@@ -137,25 +132,37 @@ The model consists of 348,219 trainable parameters, and achieves a training MSE 
 To train the model, it was necessary to capture ideal driving behavior. To begin, three laps were recorded on the "Lake" track using center lane driving. Another lap was captured travelling in the opposite direction of the first three to help minimize turning direction bias. An example image set captured of center lane driving is:
 
 ![alt text][imgRawLeft]
+
 ![alt text][imgRawCenter]
+
 ![alt text][imgRawRight]
 
 In addition to the center lane driving data, samples were captured of the vehicle recovering from the left and right sides of the driving surface back to the center to help the network learn to steer back to the center of the driving surface if its position started to deviate towards an edge.
 
-The samples gathered from the "Lake" track training were adequate to generate a network that performed well on that particular venue. The model did not perform well on the "Jungle" track because of the slopes, sharp turns, cliffs, and other background features that were very different from the prior test scenario. It was necessary to repeat the sample gathering on the "Jungle" track. Three laps in one direction were recorded, followed by two laps in the opposing direction, and this was finalized with extra samples of driving through sections of the track that were particularly difficult drive through manually.
+The samples gathered from the "Lake" track training were adequate to generate a network that performed well on that particular venue. The model did not perform well on the "Jungle" track because of the slopes, sharp turns, cliffs, and other background features that were very different from the prior test scenario. It was necessary to repeat the sample gathering on the "Jungle" track. Two laps in one direction were recorded, followed by one lap in the opposing direction, and this was finalized with extra samples of driving through sections of the track that were particularly difficult drive through manually.
 
-To further augment the data set, all of the images gathered from each of the three cameras were flipped left-to-right, and the steering angle measurements were negated. This doubled the sample size in an effort to increase training data while reducing left/right turning bias. An example of an image set that has been flipped is:
+Upon initial training, the data set was augmented by flipping all of the images gathered from each of the three cameras left-to-right. The steering angle measurements were also negated and appended. This doubled the sample size in an effort to increase training data while reducing left/right turning bias. An example of an image set that has been flipped is:
 
 ![alt text][imgFlipLeft]
+
 ![alt text][imgFlipCenter]
+
 ![alt text][imgFlipRight]
 
-Upon completion of the training data collection process, the resulting training image count was 105,420 images (17,570 samples x 3 camera views x 2 flipped image augmentation). Further preprocessing of the data included cropping and normalizing the images. An example of an image set that has been cropped is:
+This performed well initially, but efforts were made to assist single lane driving on the "Jungle" track, and this augmentation could potentially counteract the intent. This was later removed, and was found to be unnecessary for center lane driving performance.
+
+Upon completion of the training data collection process, the resulting training image count was 48,393 images (16,131 samples x 3 camera views). Further preprocessing of the data included cropping and normalizing the images. An example of an image set that has been cropped is:
 
 ![alt text][imgCropLeft]
+
 ![alt text][imgCropCenter]
+
 ![alt text][imgCropRight]
 
-The data set was then shuffled, and 20% of it was split off into a validation data set. Finally, the model was trained utilizing the training data set, and the fitment was quantified with the validation set. It was determined that four epochs were adequate to train the model with a slight overfitment as evidenced by a decreasing MSE on the training data while the MSE on the validation data slightly increased. This value was also balanced against training time of the model, as batch selection size from this large data set affected training duration and accuracy dramatically.
+The data set was then shuffled, and 20% of it was split off into a validation data set. Finally, the model was trained utilizing the training data set, and the fitment was quantified with the validation set. It was determined that three epochs were adequate to train the model with an overfitment as evidenced by a decreasing MSE on the training data while the error on the validation data was calculated to be nearly double the value. The elevated MSE did not seem to affect the ability of the model to generalize and perform well for center-lane driving.
 
 An Adam optimizer was selected because it is computationally efficient, and can provide satisfactory results rapidly. It also decays the learning rate as training progresses which can improve overall accuracy of the model as opposed to a fast, fixed learning rate.
+
+The model was tested against the simulator, and output videos were generated of the model's performance on each of the tracks. They can be found below:
+- /output_videos/run_lake_1.mp4
+- /output_videls/run_jungle_1.mp4
