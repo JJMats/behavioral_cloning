@@ -9,20 +9,6 @@ The goals / steps of this project are the following:
 * Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
 
-
-[//]: # (Image References)
-
-[imgModelVis]: ./output_images/misc/cnn-architecture.png "Model Visualization"
-[imgRawLeft]: ./output_images/raw/raw_image1.png "Raw Image - Left Camera"
-[imgRawCenter]: ./output_images/raw/raw_image0.png "Raw Image - Center Camera"
-[imgRawRight]: ./output_images/raw/raw_image2.png "Raw Image - Right Camera"
-[imgCropLeft]: ./output_images/cropped/cropped_image1.png "Cropped Image - Left Camera"
-[imgCropCenter]: ./output_images/cropped/cropped_image0.png "Cropped Image - Center Camera"
-[imgCropRight]: ./output_images/cropped/cropped_image2.png "Cropped Image - Right Camera"
-[imgFlipLeft]: ./output_images/flipped/flipped_image1.png "Flipped Image - Left Camera"
-[imgFlipCenter]: ./output_images/flipped/flipped_image0.png "Flipped Image - Center Camera"
-[imgFlipRight]: ./output_images/flipped/flipped_image2.png "Flipped Image - Right Camera"
-
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
@@ -141,7 +127,7 @@ To train the model, it was necessary to capture ideal driving behavior. To begin
   <br />
   <b>Center<b>
   <br />
-  <img src='./output_images/raw/raw_image2.png' alt='Raw Image - Left Camera' />
+  <img src='./output_images/raw/raw_image2.png' alt='Raw Image - Right Camera' />
   <br />
   <b>Right<b>
 </p>
@@ -152,21 +138,37 @@ The samples gathered from the "Lake" track training were adequate to generate a 
 
 Upon initial training, the data set was augmented by flipping all of the images gathered from each of the three cameras left-to-right. The steering angle measurements were also negated and appended. This doubled the sample size in an effort to increase training data while reducing left/right turning bias. An example of an image set that has been flipped is:
 
-![alt text][imgFlipLeft]
-
-![alt text][imgFlipCenter]
-
-![alt text][imgFlipRight]
+<p align='center'>
+  <img src='./output_images/flipped/flipped_image1.png' alt='Flipped Image - Left Camera' />
+  <br />
+  <b>Left<b>
+  <br />
+  <img src='./output_images/flipped/flipped_image0.png' alt='Flipped Image - Center Camera' />
+  <br />
+  <b>Center<b>
+  <br />
+  <img src='./output_images/flipped/flipped_image2.png' alt='Flipped Image - Right Camera' />
+  <br />
+  <b>Right<b>
+</p>
 
 This performed well initially, but efforts were made to assist single lane driving on the "Jungle" track, and this augmentation could potentially counteract the intent. This was later removed, and was found to be unnecessary for center lane driving performance.
 
 Upon completion of the training data collection process, the resulting training image count was 48,393 images (16,131 samples x 3 camera views). Further preprocessing of the data included cropping and normalizing the images. An example of an image set that has been cropped is:
 
-![alt text][imgCropLeft]
-
-![alt text][imgCropCenter]
-
-![alt text][imgCropRight]
+<p align='center'>
+  <img src='./output_images/cropped/cropped_image1.png' alt='Cropped Image - Left Camera' />
+  <br />
+  <b>Left<b>
+  <br />
+  <img src='./output_images/cropped/cropped_image0.png' alt='Cropped Image - Center Camera' />
+  <br />
+  <b>Center<b>
+  <br />
+  <img src='./output_images/cropped/cropped_image2.png' alt='Cropped Image - Right Camera' />
+  <br />
+  <b>Right<b>
+</p>
 
 The data set was then shuffled, and 20% of it was split off into a validation data set. Finally, the model was trained utilizing the training data set, and the fitment was quantified with the validation set. It was determined that three epochs were adequate to train the model with an overfitment as evidenced by a decreasing MSE on the training data while the error on the validation data was calculated to be nearly double the value. The elevated MSE did not seem to affect the ability of the model to generalize and perform well for center-lane driving.
 
