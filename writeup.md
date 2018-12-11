@@ -165,4 +165,4 @@ An Adam optimizer was selected because it is computationally efficient, and can 
 
 The model was tested against the simulator, and output videos were generated of the model's performance on each of the tracks. They can be found below:
 - [Lake Track Run](./output_videos/run_lake_1.mp4)
-- [Jungle Track Run])(./output_videos/run_jungle_1.mp4)
+- [Jungle Track Run](./output_videos/run_jungle_1.mp4)
