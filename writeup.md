@@ -58,7 +58,7 @@ The chosen model consists of a convolutional neural network that is based upon t
 
 Multiple approaches were used to reduce overfitting of the model. After numerous attempts, it was found that a single dropout layer in conjunction with the LeakyReLU activation functions provided a satisfactory reduction in neuron links to provide adequate performance of the final model. The model contains a dropout layer between the final convolutional layer and the flattening layer (model.py, line 112) to reduce overfitting of the model. 
 
-For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (model.py, line 23). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance. The performance of the model was quantified by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
+For model validation, a data set was split from the training data before the model was trained to quantify the fitment of the model. An 80/20% split was chosen (training/validation) (model.py, line 23). After the model was trained, it was tested by utilizing the self-driving car simulator in autonomous mode to provide the test data for final validation of model performance. The performance of the model was evaluated by ensuring that the vehicle could remain on the driving surface of the track while driving a lap around each course.
 
 
 #### 3. Model parameter tuning
@@ -74,7 +74,7 @@ The hyperparameters utilized to tune the model include:
 - LeakyReLU alpha (leaky_alpha)
   - The alpha value chosen for the LeakyReLU activation function was tuned by visualizing the vehicle driving autonomously around the test tracks. Values tested ranged from 0.1 to 0.3, but reducing the value improved lane keeping and center finding.
 - Learning rate
-  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 (model.py, line 121).
+  - The model used an Adam optimizer, so the learning rate was set by default at 0.001 and decayed as training progressed (model.py, line 121).
 - Steering correction factor
   - All three of the camera views obtained from the simulator were utilized for training and validation of the model. A steering correction factor was applied to the steering angle measurement (pre-training) to improve vehicle straight-line stability and to adjust the gain of the steering angle influence on the model provided by the side camera images. Values tested ranged from 0.1 to 0.3, and the median value of 0.2 was settled upon.
 
@@ -125,7 +125,9 @@ The next two convolutional layers are applied with a 3x3px filter, a 1x1px strid
 
 In-between each of the convolutional layers, a LeakyReLU activation function is applied to assist in reducing overfitting of the model. The LeakyReLU function was chosen because...
 
-The model then flattens the sample into a 1x33px sized 64-layer object and passes it through three fully-connected Keras Dense layers (code lines 116-119). These fully-connected layers reduce the object from 2112 neurons to 100, 50, and then 10, respectively. The final output is then a single neuron that produces the predicted steering angle to be utilized by the autonomous driving simulator. 
+***
+
+The model then flattens the sample into a 1x33px sized 64-layer object and passes it through three fully-connected Keras Dense layers (code lines 116-119). These fully-connected layers reduce the object from 2112 neurons to 100, 50, and then 10, respectively. The final output is then a single neuron that produces the steering angle to be utilized by the autonomous driving simulator. 
 
 The model consists of 348,219 trainable parameters, and achieves a training MSE of 0.0243 with a validation MSE of 0.0894.
 

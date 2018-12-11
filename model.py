@@ -4,6 +4,7 @@ import numpy as np
 from scipy import ndimage
 
 lines = []
+
 # Udacity Provided Training Data
 #directory = '/opt/carnd_p3/data/'
 
@@ -20,23 +21,38 @@ with open(directory + 'driving_log.csv') as csvFile:
 
 images = []
 measurements = []
-corr_fact = 0.1
+
+corr_fact = 0.2
 
 for line in lines:
-    source_path = line[0]
-    tokens = source_path.split('/')
-    filename = tokens[-1]
-    local_path = directory + 'IMG/' + filename
+    for i in range(3):        
+        source_path = line[i]
+        tokens = source_path.split('/')
+        filename = tokens[-1]
+        local_path = directory + 'IMG/' + filename
         
-    image = ndimage.imread(local_path)
-    images.append(image)
-    image_flipped = np.fliplr(image)
-    images.append(image_flipped)
+        image = ndimage.imread(local_path)
+        images.append(image)
     
-    measurement = float(line[3])
-    measurement_flipped = -measurement
+    measurement = float(line[3])    
     measurements.append(measurement)
-    measurements.append(measurement_flipped)
+    measurements.append(measurement + corr_fact)
+    measurements.append(measurement - corr_fact)
+    
+    #source_path = line[0]
+    #tokens = source_path.split('/')
+    #filename = tokens[-1]
+    #local_path = directory + 'IMG/' + filename
+    
+    #image = ndimage.imread(local_path)
+    #images.append(image)
+    #image_flipped = np.fliplr(image)
+    #images.append(image_flipped)
+    
+    #measurement = float(line[3])
+    #measurement_flipped = -measurement
+    #measurements.append(measurement)
+    #measurements.append(measurement_flipped)
     
 # Compile arrays of training data
 X_train = np.array(images)
@@ -50,7 +66,7 @@ from keras.layers.convolutional import Conv2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 leaky_alpha = 0.1
-keep_prob = 0.25
+keep_prob = 0.2
 
 model = Sequential()
 
@@ -61,35 +77,24 @@ model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160, 320, 3)))
 # Crop the images to remove data from the image that can distract the network from predicting the lane
 model.add(Cropping2D(cropping=((70, 24), (0, 0)))) #Output Image Shape: 3x66x320
 
-# Add first convolutional layer
-#model.add(Conv2D(24, 5, 5, activation='relu', subsample=(2, 2))) #Input 3@66x320, Output 24@31x98
-model.add(Conv2D(24, 5, 5, subsample=(2, 2)))
+# Add convolutional layers
+model.add(Conv2D(24, 5, 5, subsample=(2, 2))) #Input 3@66x320, Output 24@31x98
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
-#model.add(Dropout(0.25))
 
-#model.add(Conv2D(36, 5, 5, activation='relu', subsample=(2, 2))) #Input 24@31x98, Output 36@14x47
-model.add(Conv2D(36, 5, 5, subsample=(2, 2)))
+model.add(Conv2D(36, 5, 5, subsample=(2, 2))) #Input 24@31x98, Output 36@14x47
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
 
-#model.add(Conv2D(48, 5, 5, activation='relu', subsample=(2, 2))) #Input 36@14x47, Output 48@5x22
-model.add(Conv2D(48, 5, 5, subsample=(2, 2)))
+model.add(Conv2D(48, 5, 5, subsample=(2, 2))) #Input 36@14x47, Output 48@5x22
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
 
-#model.add(Conv2D(64, 3, 3, activation='relu')) #Input 48@5x22, Output 64@3x20
-model.add(Conv2D(64, 3, 3))
+model.add(Conv2D(64, 3, 3))  #Input 48@5x22, Output 64@3x20
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
 
-# Add second convolutional layer
-#model.add(Conv2D(64, 3, 3, activation='relu')) #Input 64@3x20, Output 64@1x18
-model.add(Conv2D(64, 3, 3))
+model.add(Conv2D(64, 3, 3)) #Input 64@3x20, Output 64@1x18
 model.add(LeakyReLU(alpha=leaky_alpha))
-#model.add(MaxPooling2D())
+
 model.add(Dropout(keep_prob))
-          
+
 # Add fully connected layer
 model.add(Flatten())
 model.add(Dense(100))
@@ -98,7 +103,7 @@ model.add(Dense(10))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss='mse')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=5)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=3)
 
 model.save('model.h5')
 model.summary()
