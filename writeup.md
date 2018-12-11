@@ -121,15 +121,15 @@ To train the model, it was necessary to capture ideal driving behavior. To begin
 <p align='center'>
   <img src='./output_images/raw/raw_image1.png' alt='Raw Image - Left Camera' />
   <br />
-  <b>Left<b>
+  <b>Left</b>
   <br />
   <img src='./output_images/raw/raw_image0.png' alt='Raw Image - Center Camera' />
   <br />
-  <b>Center<b>
+  <b>Center</b>
   <br />
   <img src='./output_images/raw/raw_image2.png' alt='Raw Image - Right Camera' />
   <br />
-  <b>Right<b>
+  <b>Right</b>
 </p>
 
 In addition to the center lane driving data, samples were captured of the vehicle recovering from the left and right sides of the driving surface back to the center to help the network learn to steer back to the center of the driving surface if its position started to deviate towards an edge.
@@ -141,15 +141,15 @@ Upon initial training, the data set was augmented by flipping all of the images 
 <p align='center'>
   <img src='./output_images/flipped/flipped_image1.png' alt='Flipped Image - Left Camera' />
   <br />
-  <b>Left<b>
+  <b>Left</b>
   <br />
   <img src='./output_images/flipped/flipped_image0.png' alt='Flipped Image - Center Camera' />
   <br />
-  <b>Center<b>
+  <b>Center</b>
   <br />
   <img src='./output_images/flipped/flipped_image2.png' alt='Flipped Image - Right Camera' />
   <br />
-  <b>Right<b>
+  <b>Right</b>
 </p>
 
 This performed well initially, but efforts were made to assist single lane driving on the "Jungle" track, and this augmentation could potentially counteract the intent. This was later removed, and was found to be unnecessary for center lane driving performance.
@@ -159,15 +159,15 @@ Upon completion of the training data collection process, the resulting training 
 <p align='center'>
   <img src='./output_images/cropped/cropped_image1.png' alt='Cropped Image - Left Camera' />
   <br />
-  <b>Left<b>
+  <b>Left</b>
   <br />
   <img src='./output_images/cropped/cropped_image0.png' alt='Cropped Image - Center Camera' />
   <br />
-  <b>Center<b>
+  <b>Center</b>
   <br />
   <img src='./output_images/cropped/cropped_image2.png' alt='Cropped Image - Right Camera' />
   <br />
-  <b>Right<b>
+  <b>Right</b>
 </p>
 
 The data set was then shuffled, and 20% of it was split off into a validation data set. Finally, the model was trained utilizing the training data set, and the fitment was quantified with the validation set. It was determined that three epochs were adequate to train the model with an overfitment as evidenced by a decreasing MSE on the training data while the error on the validation data was calculated to be nearly double the value. The elevated MSE did not seem to affect the ability of the model to generalize and perform well for center-lane driving.
