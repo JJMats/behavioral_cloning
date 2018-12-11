@@ -113,13 +113,10 @@ Following the cropping layer, five convolutional layers were implemented. These 
 
 <p align='center'>
   <img src='./output_images/misc/cnn-architecture.png' alt="Model Visualization" />
+  <br />
   <i>Original Source: NVIDIA CNN Neural Network Architecture. NVIDIA Developer, NVIDIA Developer Blog, 17 Aug. 2016,
 	https://devblogs.nvidia.com/deep-learning-self-driving-cars</i>
 </p>
-  
-![alt text][imgModelVis]
-
-**
 
 The first three layers apply a convolution to the image with 5x5px filters, a 2x2px stride, and 'VALID' padding (model.py, lines 92, 96, 100). Through this process, the input is transformed from the 66x320px 3-layer cropped image to a 31x158px sized 24-layer sample, and then to a 14x77px sized 36-layer sample.
 
