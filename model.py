@@ -5,10 +5,7 @@ from scipy import ndimage
 
 lines = []
 
-# Udacity Provided Training Data
-#directory = '/opt/carnd_p3/data/'
-
-# My training data
+# Directory to training data
 directory = '/root/Desktop/data/'
 
 with open(directory + 'driving_log.csv') as csvFile:
@@ -39,21 +36,6 @@ for line in lines:
     measurements.append(measurement + corr_fact)
     measurements.append(measurement - corr_fact)
     
-    #source_path = line[0]
-    #tokens = source_path.split('/')
-    #filename = tokens[-1]
-    #local_path = directory + 'IMG/' + filename
-    
-    #image = ndimage.imread(local_path)
-    #images.append(image)
-    #image_flipped = np.fliplr(image)
-    #images.append(image_flipped)
-    
-    #measurement = float(line[3])
-    #measurement_flipped = -measurement
-    #measurements.append(measurement)
-    #measurements.append(measurement_flipped)
-    
 # Compile arrays of training data
 X_train = np.array(images)
 y_train = np.array(measurements)
@@ -72,25 +54,24 @@ model = Sequential()
 
 # Normalize the images
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160, 320, 3)))
-#model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(160, 320, 3), output_shape=(160, 320, 3)))
 
 # Crop the images to remove data from the image that can distract the network from predicting the lane
 model.add(Cropping2D(cropping=((70, 24), (0, 0)))) #Output Image Shape: 3x66x320
 
 # Add convolutional layers
-model.add(Conv2D(24, 5, 5, subsample=(2, 2))) #Input 3@66x320, Output 24@31x98
+model.add(Conv2D(24, 5, 5, subsample=(2, 2))) #Input 3@66x320, Output 24@31x158
 model.add(LeakyReLU(alpha=leaky_alpha))
 
-model.add(Conv2D(36, 5, 5, subsample=(2, 2))) #Input 24@31x98, Output 36@14x47
+model.add(Conv2D(36, 5, 5, subsample=(2, 2))) #Input 24@31x158, Output 36@14x77
 model.add(LeakyReLU(alpha=leaky_alpha))
 
-model.add(Conv2D(48, 5, 5, subsample=(2, 2))) #Input 36@14x47, Output 48@5x22
+model.add(Conv2D(48, 5, 5, subsample=(2, 2))) #Input 36@14x77, Output 48@5x37
 model.add(LeakyReLU(alpha=leaky_alpha))
 
-model.add(Conv2D(64, 3, 3))  #Input 48@5x22, Output 64@3x20
+model.add(Conv2D(64, 3, 3))  #Input 48@5x37, Output 64@3x35
 model.add(LeakyReLU(alpha=leaky_alpha))
 
-model.add(Conv2D(64, 3, 3)) #Input 64@3x20, Output 64@1x18
+model.add(Conv2D(64, 3, 3)) #Input 64@3x35, Output 64@1x33
 model.add(LeakyReLU(alpha=leaky_alpha))
 
 model.add(Dropout(keep_prob))
